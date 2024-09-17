@@ -1,50 +1,43 @@
-class Car:
+def getDataPoint(stock):
+    """Generate a data point for a stock."""
+    stock_name, bid_price, ask_price = stock
+    # Calculate the average price
+    price = (bid_price + ask_price) / 2
+    return stock_name, bid_price, ask_price, price
 
-    def __init__(self, speed=0):
-        self.speed = speed
-        self.odometer = 0
-        self.time = 0
+def getRatio(price_a, price_b):
+    """Calculate the ratio of price_a to price_b, ensuring no division by zero."""
+    if price_b == 0:
+        return None  # Handle division by zero case
+    return price_a / price_b
 
-    def say_state(self):
-        print("I'm going {} kph!".format(self.speed))
+def main():
+    # Example stock data (you would typically get this from a feed)
+    stocks = [
+        ('StockA', 120, 125),
+        ('StockB', 200, 210)
+    ]
+    
+    # Dictionary to store stock prices
+    prices = {}
+    
+    # Process stock data
+    for stock in stocks:
+        stock_name, bid_price, ask_price, price = getDataPoint(stock)
+        prices[stock_name] = price
+        print(f"Data point for {stock_name}: bid={bid_price}, ask={ask_price}, price={price}")
+    
+    # Compute the ratio between two stocks
+    stock_a_price = prices.get('StockA')
+    stock_b_price = prices.get('StockB')
+    
+    ratio = getRatio(stock_a_price, stock_b_price)
+    
+    if ratio is not None:
+        print(f"The ratio of StockA to StockB is {ratio}")
+    else:
+        print("Cannot compute ratio, division by zero.")
 
-    def accelerate(self):
-        self.speed += 5
-
-    def brake(self):
-        if self.speed < 5:
-            self.speed = 0
-        else:
-            self.speed -= 5
-
-    def step(self):
-        self.odometer += self.speed
-        self.time += 1
-
-    def average_speed(self):
-        if self.time != 0:
-            return self.odometer / self.time
-        else:
-            pass
-
-
-if __name__ == '__main__':
-
-    my_car = Car()
-    print("I'm a car!")
-    while True:
-        action = input("What should I do? [A]ccelerate, [B]rake, "
-                 "show [O]dometer, or show average [S]peed?").upper()
-        if action not in "ABOS" or len(action) != 1:
-            print("I don't know how to do that")
-            continue
-        if action == 'A':
-            my_car.accelerate()
-        elif action == 'B':
-            my_car.brake()
-        elif action == 'O':
-            print("The car has driven {} kilometers".format(my_car.odometer))
-        elif action == 'S':
-            print("The car's average speed was {} kph".format(my_car.average_speed()))
-        my_car.step()
-        my_car.say_state()
+# Run the main function
+if __name__ == "__main__":
+    main()
